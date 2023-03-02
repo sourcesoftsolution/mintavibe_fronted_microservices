@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { API } from "../apiwrapper";
+import { allApi, API } from "../apiwrapper";
 import Nfts from "../components/All-Nfts/all-nfts";
 import FilterNft from "../components/All-Nfts/FilterNft";
 import Nftlisting from "../components/All-Nfts/nftlist";
@@ -73,20 +73,28 @@ export default function Nftlist() {
   };
   const getUrl = () => {
     let searchString = makeSerchSting();
+
     let url = searchString
-      ? `${apiURl.allNftList}?${searchString}`
+      ? `${apiURl.GetCollections}?${searchString}`
       : `${apiURl.Products}`;
+
     navigate({
       pathname: "/nftlist",
       search: `?${searchString}`,
     });
+
     return url;
   };
   const fetchNFTList = async () => {
     const URL = getUrl();
     try {
-      API({ url: URL, method: "GET" }).then((data) => {
-        setlisting(data?.data?.allNft || []);
+
+      allApi({
+        url: `${process.env.REACT_APP_BACKENDURL}${URL}`, method: "GET", headers: {
+          "Authorization": `Bearer ${process.env.REACT_APP_BACKEND_AUTHRIZATION_TOKEN}`
+        }
+      }).then((data) => data?.response?.data || {}).then((data) => {
+        setlisting(data?.message || []);
         setData(data);
       });
     } catch (error) {

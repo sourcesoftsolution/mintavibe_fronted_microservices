@@ -4,37 +4,32 @@ import { Link } from "react-router-dom";
 import { allChainsIDS } from "../../store/actions/extra-function";
 
 const Card = ({
-  Nftname,
+  name = "",
   image,
+  launch_details: { price } = {},
   likes_count,
   Category,
   Description,
-  instant_sale_price,
   _id,
   wallet_type = "ETH",
-  sign_instant_sale_price,
-  coverImage,
+  cover_image,
   cretor_wallet_address,
   mediaType,
-  no_of_copies,
+  total: { minted } = {},
   collection_type,
   Owner_id,
-  nft_type,
-  Bids,
+  launch_details: { sale_type } = {},
+  chain_id
 }) => {
   const [NNetwokType, setNNetwokType] = useState(false);
   const { loginUserData = {} } = useSelector((state) => state.authUser);
-  // const { id: User_Id = false } = loginUserData
+
   useEffect(() => {
     const NetworkName = Object.entries(allChainsIDS).find(
-      (item) => wallet_type == item[1]
+      (item) => chain_id == item[1]
     );
     setNNetwokType(NetworkName || false);
-  }, [wallet_type]);
-  // const Highest_Bid = CollectionDetails?.Bids?.reduce(
-  //   (acc, ass) => (+acc?.Amount > +ass?.Amount ? +acc?.Amount : +ass?.Amount),
-  //   0
-  // );
+  }, [chain_id]);
 
   return (
     <div className="nft-box">
@@ -46,12 +41,12 @@ const Card = ({
             style={{ maxHeight: "180px", minHeight: "180px" }}
           /> */}
         <img
-          src={`${process.env.REACT_APP_BACKENDURL}/${coverImage}` || image}
+          src={cover_image}
           alt=""
         />
         <div className="nft-box-div">
           <div className="like-icon">
-            {collection_type ? null : <> {no_of_copies}x</>}
+            {collection_type ? null : <> {minted}x</>}
             <img
               src={`/images/${mediaType == "video"
                 ? "video"
@@ -63,7 +58,7 @@ const Card = ({
             />
           </div>
           <p>
-            {Nftname?.length < 20 ? Nftname : Nftname?.substr(0, 14) + "...."}
+            {name.length < 20 ? name : name.substr(0, 14) + "...."}
           </p>
           <span>
             {cretor_wallet_address &&
@@ -82,7 +77,7 @@ const Card = ({
               alt=""
             />
           </div>
-          {nft_type === "OPENBID" ? (
+          {sale_type === "AUCTION" ? (
             <>
               <p>Highest Bid</p>
               <span></span>
@@ -91,7 +86,7 @@ const Card = ({
             <>
               <p>Price</p>
               <span>
-                {sign_instant_sale_price || instant_sale_price || 0}{" "}
+                {price || 0}{" "}
                 {NNetwokType[0] == "XUMM" ? "XRP" : "ETH"}
               </span>
             </>
@@ -101,7 +96,7 @@ const Card = ({
           <Link to={`/collections/${_id}`}>
             {Owner_id && Owner_id?._id == loginUserData?.id
               ? "View"
-              : nft_type === "OPENBID"
+              : sale_type === "AUCTION"
                 ? "Bid"
                 : "Buy"}
           </Link>

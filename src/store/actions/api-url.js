@@ -3,7 +3,7 @@ const apiURl = {
   TrendingNft: "/trendingnft",
   AllFavNft: "/favnft",
   CreatorList: "/femalecreator",
-  GetCollections: "/collections",
+  GetCollections: "/collections/v1",
   User: "/v1/users",
   ProfileListing: "/listing",
   Products: "/nft",

@@ -175,7 +175,6 @@ function App() {
 
               <Route path="/profile/:collected" element={<EditProfile />} />
 
-
               <Route
                 path="/profile/edit/:userId"
                 element={<ProfileSetting />}
