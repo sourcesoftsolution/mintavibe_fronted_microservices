@@ -23,8 +23,8 @@ function SignUp() {
   const { popupReducer } = useSelector((state) => state);
   const { modalType = "", showModal = false } = popupReducer?.modal;
   const [inpData, setInpData] = useState({
-    firstname: "",
-    lastname: "",
+    firstName: "",
+    lastName: "",
     contact: "",
     email: "",
     password: "",
@@ -42,7 +42,7 @@ function SignUp() {
   let regexSmlChar = /^(?=.*[a-z])/;
   let regexUprChar = /^(?=.*[A-Z])/;
   let regexSpclChar = /[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
-  const { firstname, lastname, contact, email, password, cpassword } = inpData;
+  const { firstName, lastName, contact, email, password, cpassword } = inpData;
   const handleClosePopup = () => {
     dispatch(SetpopupReducerData({ modalType: "", showModal: false }));
   };
@@ -55,11 +55,11 @@ function SignUp() {
   const handleValidate = (e) => {
     const errors1 = {};
     switch (e.target.name) {
-      case "firstname":
-        errors1.firstname = validateFirstName(e.target.value);
+      case "firstName":
+        errors1.firstName = validateFirstName(e.target.value);
         break;
-      case "lastname":
-        errors1.lastname = validateLastName(e.target.value);
+      case "lastName":
+        errors1.lastName = validateLastName(e.target.value);
         break;
       case "email":
         errors1.email = validateEmail(e.target.value);
@@ -80,8 +80,8 @@ function SignUp() {
   };
   const validateAll = () => {
     let err1 = {};
-    err1.firstname = validateFirstName(firstname);
-    err1.lastname = validateLastName(lastname);
+    err1.firstName = validateFirstName(firstName);
+    err1.lastName = validateLastName(lastName);
     err1.email = validateEmail(email);
     err1.contact = validateMobile(contact);
     err1.password = validatePassWord(password);
@@ -162,15 +162,15 @@ function SignUp() {
                   <input
                     type="text"
                     id="First_Name"
-                    name="firstname"
-                    value={firstname}
+                    name="firstName"
+                    value={firstName}
                     placeholder="First Name"
                     onBlur={handleValidate}
                     onChange={handleChange}
                   />
-                  {errors.firstname ? (
+                  {errors.firstName ? (
                     <span className="text-danger" style={{ fontSize: "14px" }}>
-                      {errors.firstname}
+                      {errors.firstName}
                     </span>
                   ) : (
                     ""
@@ -183,15 +183,15 @@ function SignUp() {
                   <input
                     type="text"
                     id="Last_Name"
-                    name="lastname"
-                    value={lastname}
+                    name="lastName"
+                    value={lastName}
                     placeholder="Last Name"
                     onBlur={handleValidate}
                     onChange={handleChange}
                   />
-                  {errors.lastname ? (
+                  {errors.lastName ? (
                     <span className="text-danger" style={{ fontSize: "14px" }}>
-                      {errors.lastname}
+                      {errors.lastName}
                     </span>
                   ) : (
                     ""
