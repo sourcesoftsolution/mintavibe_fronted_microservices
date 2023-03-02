@@ -124,7 +124,8 @@ function EditProfile() {
   };
 
   const {
-    Name = false,
+    firstName = false,
+    lastName = false,
     image = null,
     _id = false,
     address: walletList = [],
@@ -141,7 +142,7 @@ function EditProfile() {
     Followings = [],
     Bio = ""
   } = authUser?.loginUserData;
-
+  console.log(authUser?.loginUserData);
   // const { Totalfollower = false, Totalfollowing = false } = useSelector(
   //   (state) => state.authUser?.loginUserData
   // );
@@ -248,15 +249,13 @@ function EditProfile() {
               <div className="profile-text">
                 <p>
                   {" "}
-                  {Name
-                    ? Name
-                    : address
-                      ? address.slice(0, 4) +
-                      "...." +
-                      address.slice(address.length - 4)
-                      : walletAddress.slice(0, 4) +
-                      "...." +
-                      walletAddress.slice(walletAddress.length - 4)}
+                  {firstName
+                    ? firstName
+                    : ''}
+                  {" "}
+                  {lastName
+                    ? lastName
+                    : ''}
                 </p>
 
                 {walletList.map(

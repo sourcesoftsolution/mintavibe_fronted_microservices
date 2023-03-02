@@ -108,6 +108,7 @@ function SignUp() {
 
         inpData["location"] = JSON.stringify(location);
         inpData["termsService"] = termsService;
+        inpData["roleID"] = process.env.BUYER_ROLE_ID
 
         await allApi({
           url: `${process.env.REACT_APP_USER_BACKENDURL + apiURl.User}`,

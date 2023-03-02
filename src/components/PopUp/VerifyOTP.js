@@ -61,7 +61,7 @@ function VerifyOTP() {
       let err = validateAll();
       if (isValid(err)) {
         const payload = {
-          email: authUser?.signUpUser?.email,
+          email: authUser?.signUpUser?.email.id,
           otp: `${num1}${num2}${num3}${num4}`,
         };
         await allApi({
