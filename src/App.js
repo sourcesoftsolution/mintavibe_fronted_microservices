@@ -51,11 +51,11 @@ function App() {
   }, [dispatch]);
 
   useEffect(() => {
-    if (address && loginUserData?.id) {
+    if (address && loginUserData?._id) {
       (async () => {
         try {
           await API({
-            url: `${apiURl.userData}/${loginUserData?.id}`,
+            url: `${apiURl.userData}/${loginUserData?._id}`,
             method: "PUT",
             body: { address },
             formData: false,
@@ -169,7 +169,7 @@ function App() {
           <Route path="/contactus" element={<ContactUs />} />
           <Route path="/create/:title" element={<FormPage />} />
 
-          {loginUserData?.id ? (
+          {loginUserData?._id ? (
             <>
               <Route path="/profile" element={<EditProfile />} />
 

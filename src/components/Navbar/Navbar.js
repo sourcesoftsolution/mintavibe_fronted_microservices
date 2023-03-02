@@ -116,7 +116,7 @@ function Navbar() {
     let val = themeVal === "darkTheme" ? "lightTheme" : "darkTheme";
     localStorage.setItem("Theme", val);
   };
-  const handleShowSell=()=>{
+  const handleShowSell = () => {
     dispatch(SetpopupReducerData({ modalType: "SELL", showModal: true }));
     setShowPopup(true);
   }
@@ -148,37 +148,37 @@ function Navbar() {
               <div className="respMenuOnly d-flex justify-content-end">
                 <button className="respMenu d-lg-none ms-2 order-2" onClick={handleClick}><i class="fas fa-bars"></i></button>
                 <div className={`topMenu ${isActive ? 'show' : ''}`}>
-                    <ul className="nav navbar-nav">
-                      {/* <li>
+                  <ul className="nav navbar-nav">
+                    {/* <li>
                         <a href="!#" onClick={handleShowCreatePopup}>
                           Create
                         </a>
                       </li> */}
-                      {loginUserData?.token && (
-                        <li onClick={handleShowSell}>
-                          <NavLink to="!#">Sell</NavLink>
-                        </li>
-                      )}
-                      <li>
-                        <NavLink to="/nftlist">Collect</NavLink>
+                    {loginUserData?.token && (
+                      <li onClick={handleShowSell}>
+                        <NavLink to="!#">Sell</NavLink>
                       </li>
-                      <li>
-                        <NavDropdown
-                          id="nav-dropdown-dark-example"
-                          title={`Community`}
-                          menuVariant="light"
-                          className="customLink"
-                        >
-                          <NavDropdown.Item onClick={(e) => {e.preventDefault(); navigate(`/blogs`); }} href="/blogs">
-                            Blog
-                          </NavDropdown.Item>
+                    )}
+                    <li>
+                      <NavLink to="/nftlist">Collect</NavLink>
+                    </li>
+                    <li>
+                      <NavDropdown
+                        id="nav-dropdown-dark-example"
+                        title={`Community`}
+                        menuVariant="light"
+                        className="customLink"
+                      >
+                        <NavDropdown.Item onClick={(e) => { e.preventDefault(); navigate(`/blogs`); }} href="/blogs">
+                          Blog
+                        </NavDropdown.Item>
 
-                          <NavDropdown.Item href="#">Discord</NavDropdown.Item>
-                          <NavDropdown.Item href={"/contactus"}>
-                            Contact Us
-                          </NavDropdown.Item>
+                        <NavDropdown.Item href="#">Discord</NavDropdown.Item>
+                        <NavDropdown.Item href={"/contactus"}>
+                          Contact Us
+                        </NavDropdown.Item>
 
-                          {/* <NavDropdown.Item
+                        {/* <NavDropdown.Item
                             onClick={(e) => {
                               e.preventDefault();
                               navigate(`/about`);
@@ -207,12 +207,12 @@ function Navbar() {
                           >
                             Terms of Service
                           </NavDropdown.Item> */}
-                        </NavDropdown>
-                      </li>
-                      {/* <li>
+                      </NavDropdown>
+                    </li>
+                    {/* <li>
                         <NavLink to="/nftforall">#NFTforAll</NavLink>
                       </li> */}
-                    </ul>
+                  </ul>
                 </div>
                 <div className="menuOuter" onClick={handleClick}></div>
                 <div className="loginSerch d-flex justify-content-end align-items-center">
@@ -235,7 +235,7 @@ function Navbar() {
                   </form>
                   <div className="ms-lg-3">
                     <ul className="hedIcons">
-                      {!loginUserData?.token && (
+                      {!loginUserData?.jwtToken && (
                         <li>
                           <button
                             className="btn btn-light loginBtn"
@@ -246,7 +246,7 @@ function Navbar() {
                           </button>
                         </li>
                       )}
-                      {loginUserData?.token && (
+                      {loginUserData?.jwtToken && (
                         <>
                           {
                             <li>
@@ -263,8 +263,8 @@ function Navbar() {
                                     src={
                                       image
                                         ? process.env.REACT_APP_BACKENDURL +
-                                          "/" +
-                                          image
+                                        "/" +
+                                        image
                                         : "/images/user-icon.png"
                                     }
                                     alt=""

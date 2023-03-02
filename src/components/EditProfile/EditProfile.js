@@ -87,10 +87,10 @@ function EditProfile() {
     console.log(filter?.profile, "activity");
     let url =
       filter?.profile === "activity"
-        ? `${apiURl.activity}/${authUser?.loginUserData?.id}`
+        ? `${apiURl.activity}/${authUser?.loginUserData?._id}`
         : searchString
-          ? `${apiURl.userprofilefilter}/${authUser?.loginUserData?.id}?${searchString}`
-          : `${apiURl.userprofilefilter}/${authUser?.loginUserData?.id}`;
+          ? `${apiURl.userprofilefilter}/${authUser?.loginUserData?._id}?${searchString}`
+          : `${apiURl.userprofilefilter}/${authUser?.loginUserData?._id}`;
     navigate({
       pathname: "/profile",
       profile: `?${searchString}`,
@@ -101,7 +101,7 @@ function EditProfile() {
   const fetchUserData = async () => {
     try {
       await API({
-        url: `${apiURl.GetUsers}/${authUser?.loginUserData?.id}`,
+        url: `${apiURl.GetUsers}/${authUser?.loginUserData?._id}`,
         method: "GET",
       }).then((values) => {
         dispatch(SetUserData(values?.userData));
@@ -127,6 +127,7 @@ function EditProfile() {
     Name = false,
     image = null,
     _id = false,
+    address: walletList = [],
     coverimage = null,
     type = false,
     Personal_url = false,
@@ -136,19 +137,17 @@ function EditProfile() {
     Youtube_link = false,
     Totalfollower = false,
     Totalfollowing = false,
-    Followers=[],
-    Followings=[],
-    Bio=""
-  } = User?.data;
+    Followers = [],
+    Followings = [],
+    Bio = ""
+  } = authUser?.loginUserData;
 
   // const { Totalfollower = false, Totalfollowing = false } = useSelector(
   //   (state) => state.authUser?.loginUserData
   // );
   console.log(filter, User, "User");
   const { walletAddress = "" } = useSelector((state) => state.User?.xumm);
-
   const [showMore, setShowMore] = useState(false);
-
   const [show, setShow] = useState(false);
   const [key, setKey] = useState("followers");
 
@@ -164,7 +163,7 @@ function EditProfile() {
 
   const handleEditProfile = (e) => {
     e.preventDefault();
-    navigate(`/profile/edit/${authUser?.loginUserData?.id}`);
+    navigate(`/profile/edit/${authUser?.loginUserData?._id}`);
   };
 
   useEffect(() => {
@@ -259,6 +258,19 @@ function EditProfile() {
                       "...." +
                       walletAddress.slice(walletAddress.length - 4)}
                 </p>
+
+                {walletList.map(
+                  (ele) => <>
+                    <p>
+                      {" "}
+                      {ele.walletAddress.slice(0, 4) +
+                        "...." +
+                        ele.walletAddress.slice(-4)
+                      }
+                    </p>
+                    <img src="" alt="" />
+                  </>
+                )}
               </div>
             </div>
             <div className="col-sm-6 col-md-6 follow-div-web ">
