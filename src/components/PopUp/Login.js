@@ -5,7 +5,7 @@ import {
   LOGIN_USER_DATA,
   SIGNUP_USER_DATA,
 } from "../../store/actions/ActionTypes";
-import { API } from "../../apiwrapper";
+import { allApi, API } from "../../apiwrapper";
 import { apiURl } from "../../store/actions";
 import { toast } from "react-toastify";
 import {
@@ -86,7 +86,7 @@ function Login() {
           body: { email: inpData.email },
           formData: false,
         }).then((data) => {
-         
+
           if (data?.status || data?.status === "true") {
             // toast(`${data?.message}`, { type: "success" });
             dispatch(
@@ -116,24 +116,26 @@ function Login() {
         if (rememberMe) {
           setCookiesData();
         }
-        await API({
-          url: apiURl.login,
+        console.log(process.env.REACT_APP_USER_BACKENDURL + apiURl.login);
+        await allApi({
+          url: `${process.env.REACT_APP_USER_BACKENDURL + apiURl.login}`,
           method: "POST",
-          body: { ...inpData },
-          formData: false,
+          body: inpData,
+          headers: {
+            "Content-Type": "application/json"
+          }
         }).then((data) => {
           if (data?.status || data?.status === "true") {
-            // toast(`${data?.message}`, { type: "success" });
             dispatch({
               type: LOGIN_USER_DATA,
-              payload: data?.response?.data,
+              payload: data?.response,
             });
-            localStorage.setItem("token", data?.response?.data?.token);
+            localStorage.setItem("token", data?.response?.jwtToken);
             dispatch(SetpopupReducerData({ modalType: "", showModal: false }));
             setVerify(true);
           } else {
-            if (data?.response?.data) {
-              setVerify(data?.response?.data?.IsVerified);
+            if (data?.response) {
+              setVerify(data?.response?.email?.isVerified);
             } else {
               setVerify(true);
             }
@@ -244,9 +246,8 @@ function Login() {
                     onBlur={handleValidate}
                   />
                   <i
-                    className={`${
-                      showPass ? " fa fa-eye " : " fa fa-eye-slash "
-                    } eye-icon`}
+                    className={`${showPass ? " fa fa-eye " : " fa fa-eye-slash "
+                      } eye-icon`}
                     id="togglePassword"
                     onClick={() => setShowPass(!showPass)}
                   ></i>
@@ -259,7 +260,7 @@ function Login() {
                     </span>
                   )}
                 </div>
-                
+
                 <div className="form-div">
                   <div className="check-box-div">
                     <input
@@ -285,7 +286,7 @@ function Login() {
                 </button>
                 <div className="form-div">
                   <p>
-                  Don't have an account?{" "}
+                    Don't have an account?{" "}
                     <Link
                       href="#"
                       style={{ paddingLeft: "22px" }}

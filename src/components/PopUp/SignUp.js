@@ -4,7 +4,7 @@ import { Modal } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import { API } from "../../apiwrapper";
+import { allApi, API } from "../../apiwrapper";
 import { apiURl } from "../../store/actions";
 
 import { SIGNUP_USER_DATA } from "../../store/actions/ActionTypes";
@@ -105,23 +105,26 @@ function SignUp() {
     try {
       let err = validateAll();
       if (isValid(err)) {
-        let formData = new FormData();
-        Object.keys(inpData).map((key) => formData.append(key, inpData[key]));
-        formData.append("location", JSON.stringify(location));
-        formData.append("termsService", termsService);
-        await API({
-          url: apiURl.singup,
+
+        inpData["location"] = JSON.stringify(location);
+        inpData["termsService"] = termsService;
+
+        await allApi({
+          url: `${process.env.REACT_APP_USER_BACKENDURL + apiURl.User}`,
           method: "POST",
-          body: formData,
-          formData: true,
+          body: inpData,
+          headers: {
+            "Content-Type": "application/json"
+          }
         }).then((data) => {
-          if (data?.status || data?.status === "true") {
+          const { Data } = data
+          if (Data?.status || Data?.status === "true") {
             dispatch(
               SetpopupReducerData({ modalType: "OTP", showModal: true })
             );
             dispatch({
               type: SIGNUP_USER_DATA,
-              payload: data?.response?.data,
+              payload: Data?.Save,
             });
           } else {
             setApiErrors({ message: data?.message });
@@ -252,9 +255,8 @@ function SignUp() {
                     onChange={handleChange}
                   />
                   <i
-                    className={`${
-                      showPass ? " fa fa-eye " : " fa fa-eye-slash "
-                    } eye-icon`}
+                    className={`${showPass ? " fa fa-eye " : " fa fa-eye-slash "
+                      } eye-icon`}
                     id="togglePassword"
                     onClick={() => setShowPass(!showPass)}
                   ></i>
@@ -342,9 +344,8 @@ function SignUp() {
                     disabled={!password || false}
                   />
                   <i
-                    className={`${
-                      showCPass ? " fa fa-eye " : " fa fa-eye-slash "
-                    } eye-icon`}
+                    className={`${showCPass ? " fa fa-eye " : " fa fa-eye-slash "
+                      } eye-icon`}
                     id="togglePassword"
                     onClick={() => setShowCPass(!showCPass)}
                   ></i>

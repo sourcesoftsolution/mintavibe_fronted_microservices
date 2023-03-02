@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Modal } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { API } from "../../apiwrapper";
+import { allApi, API } from "../../apiwrapper";
 import { apiURl } from "../../store/actions";
 import { SIGNUP_USER_DATA } from "../../store/actions/ActionTypes";
 import { SetpopupReducerData } from "../../store/reducer";
@@ -36,7 +36,7 @@ function VerifyOTP() {
     });
   };
   const inputfocus = (e) => {
-    console.log(e.key,"e.key")
+    console.log(e.key, "e.key")
     if (e.key === "Delete" || e.key === "Backspace") {
       const next = e.target.tabIndex - 2;
       if (next > -1) {
@@ -64,15 +64,17 @@ function VerifyOTP() {
           email: authUser?.signUpUser?.email,
           otp: `${num1}${num2}${num3}${num4}`,
         };
-        await API({
-          url: apiURl.otpverify,
+        await allApi({
+          url: `${process.env.REACT_APP_USER_BACKENDURL + apiURl.otpverify}`,
           method: "POST",
           body: {
             ...payload,
           },
-          formData: false,
+          headers: {
+            "Content-Type": "application/json"
+          }
         }).then((data) => {
-        
+          console.log(data);
           if (data?.status || data?.status === "true") {
             // toast(`${data?.message}`, { type: "success" });
             if (!Object.keys(authUser?.signUpUser).includes("forgetpassword")) {
@@ -156,93 +158,92 @@ function VerifyOTP() {
             </span>
           </p>
           <div className="login-section">
-             <form action="" method="post">
-            <div className="Verify-otp-div mb-0">
-              <input
-                type="text"
-                name="num1"
-                value={num1}
-                maxLength={1}
-                onInput={handleInput}
-                onChange={handleChange}
-                tabIndex="1"
-                onKeyUp={inputfocus}
+            <form action="" method="post">
+              <div className="Verify-otp-div mb-0">
+                <input
+                  type="text"
+                  name="num1"
+                  value={num1}
+                  maxLength={1}
+                  onInput={handleInput}
+                  onChange={handleChange}
+                  tabIndex="1"
+                  onKeyUp={inputfocus}
                 // onKeyPress={keyPressed}
-              />
-              <input
-                type="text"
-                name="num2"
-                value={num2}
-                maxLength={1}
-                onInput={handleInput}
-                onChange={handleChange}
-                tabIndex="2"
-                onKeyUp={inputfocus}
+                />
+                <input
+                  type="text"
+                  name="num2"
+                  value={num2}
+                  maxLength={1}
+                  onInput={handleInput}
+                  onChange={handleChange}
+                  tabIndex="2"
+                  onKeyUp={inputfocus}
                 // onKeyPress={keyPressed}
-              />
-              <input
-                type="text"
-                name="num3"
-                value={num3}
-                maxLength={1}
-                onInput={handleInput}
-                onChange={handleChange}
-                tabIndex="3"
-                onKeyUp={inputfocus}
+                />
+                <input
+                  type="text"
+                  name="num3"
+                  value={num3}
+                  maxLength={1}
+                  onInput={handleInput}
+                  onChange={handleChange}
+                  tabIndex="3"
+                  onKeyUp={inputfocus}
                 // onKeyPress={keyPressed}
-              />
-              <input
-                type="text"
-                name="num4"
-                value={num4}
-                onInput={handleInput}
-                onChange={handleChange}
-                maxLength={1}
-                tabIndex="4"
-                onKeyUp={inputfocus}
+                />
+                <input
+                  type="text"
+                  name="num4"
+                  value={num4}
+                  onInput={handleInput}
+                  onChange={handleChange}
+                  maxLength={1}
+                  tabIndex="4"
+                  onKeyUp={inputfocus}
                 // onKeyPress={keyPressed}
-              />
-            </div>
-            {apiErrors.message && (
-              <span
-                className="text-danger mb-0 d-block"
-                style={{ fontSize: "14px" }}
-              >
-                {apiErrors.message}
-              </span>
-            )}
-
-            <button className="login-screen-button" onClick={handleSubmit}>
-              Verify
-            </button>
-            <div className="form-div">
-              {seconds > 0 || minutes > 0 ? (
-                <p>
-                  Time Remaining: {minutes < 10 ? `0${minutes}` : minutes}:
-                  {seconds < 10 ? `0${seconds}` : seconds}
-                </p>
-              ) : (
-                <p>Didn't recieve code?</p>
+                />
+              </div>
+              {apiErrors.message && (
+                <span
+                  className="text-danger mb-0 d-block"
+                  style={{ fontSize: "14px" }}
+                >
+                  {apiErrors.message}
+                </span>
               )}
-              <p>
-                <a href="#">
-                  <img
-                    src="/images/resend-icon.svg"
-                    style={{ paddingRight: "10px", width: "25p" }}
-                  />
-                  <button
-                    className={`${
-                      seconds > 0 || minutes > 0 ? "btn-disable" : "btn-primary"
-                    } btn`}
-                    onClick={handleResendOTP}
-                    disabled={seconds > 0 || minutes > 0}
-                    
-                  >
-                    Resend OTP{" "}
-                  </button>
-                </a>
-              </p>
-            </div>
+
+              <button className="login-screen-button" onClick={handleSubmit}>
+                Verify
+              </button>
+              <div className="form-div">
+                {seconds > 0 || minutes > 0 ? (
+                  <p>
+                    Time Remaining: {minutes < 10 ? `0${minutes}` : minutes}:
+                    {seconds < 10 ? `0${seconds}` : seconds}
+                  </p>
+                ) : (
+                  <p>Didn't recieve code?</p>
+                )}
+                <p>
+                  <a href="#">
+                    <img
+                      src="/images/resend-icon.svg"
+                      style={{ paddingRight: "10px", width: "25p" }}
+                    />
+                    <button
+                      className={`${seconds > 0 || minutes > 0 ? "btn-disable" : "btn-primary"
+                        } btn`}
+                      onClick={handleResendOTP}
+                      disabled={seconds > 0 || minutes > 0}
+
+                    >
+                      Resend OTP{" "}
+                    </button>
+                  </a>
+                </p>
+              </div>
             </form>
           </div>
         </div>

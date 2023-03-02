@@ -33,7 +33,8 @@ import BlogDetails from "./pages/BlogDetails";
 import Celebrity from "./components/Celebrity/Celebrity";
 import UserProfile from "./components/UserProfile";
 
-const socket = io.connect(process.env.REACT_APP_BACKENDURL);
+const socket = false
+// io.connect(process.env.REACT_APP_BACKENDURL);
 
 function App() {
   const { address, provider } = useWeb3();

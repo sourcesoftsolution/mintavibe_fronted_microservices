@@ -4,10 +4,7 @@ const apiURl = {
   AllFavNft: "/favnft",
   CreatorList: "/femalecreator",
   GetCollections: "/collections",
-  UserDetails: "/users",
-  userData: "/userData",
-  EditUser: "/users",
-  GetUsers: "/users",
+  User: "/v1/users",
   ProfileListing: "/listing",
   Products: "/nft",
   allNftList: "/allNftList",
@@ -30,8 +27,8 @@ const apiURl = {
   createPayment: "/create-payment",
   verifyPayment: "/verify-payment",
   singup: "/signup",
-  otpverify: "/otpverify",
-  login: "/login",
+  otpverify: "/v1/verifyotp",
+  login: "/v1/login",
   forgetpassword: "/forgetpassword",
   resetpass: "/resetpass",
   activityDetails: "/notification",
@@ -57,8 +54,8 @@ const apiURl = {
   testxummbuy: "/testxummbuy",
   xummTransfer: "/xummTransfer",
   History: "/history",
-  likesdata:"/likesdata",
-  followerdata:"/followerdata"
+  likesdata: "/likesdata",
+  followerdata: "/followerdata"
 };
 
 export const NotificationMsg = {
