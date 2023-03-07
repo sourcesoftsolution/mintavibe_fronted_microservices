@@ -116,7 +116,7 @@ function NftDetails() {
 
   const [BlanceXumm, setBlanceXumm] = useState(0);
 
-  const { socket } = useSelector((state) => state.Socket);
+  // const { socket } = useSelector((state) => state.Socket);
 
   const handleClose = () => setShow(false);
 
@@ -138,6 +138,7 @@ function NftDetails() {
       }
     );
   };
+
   const fetchOwners = async () => {
     try {
       await API({
@@ -155,40 +156,46 @@ function NftDetails() {
       console.log(error);
     }
   };
+
   const token = gup("token");
   const session = gup("session");
   const Type = gup("type");
 
   const FetchData = async () => {
-    await API({ url: `${apiURl.Nft}/${id}`, method: "GET" }).then((data) => {
-      setCollectionDetails(data.data);
-      return data.data;
+    const result = await API({ url: `${apiURl.Nft}/${id}`, method: "GET" }).then((data) => {
+      return data.response.data.message;
+    }).catch((err) => {
+      console.log(err);
+      return {};
     });
+    setCollectionDetails(result);
   };
 
   useEffect(() => {
     FetchData();
-    FetchHistoryData();
-    fetchOwners();
-  }, [id, type]);
+    // FetchHistoryData();
+    // fetchOwners();
+  }, [id]);
 
   useEffect(() => {
     const NetworkName = Object.entries(allChainsIDS).find(
-      (item) => CollectionDetails?.wallet_type == item[1]
+      (item) => CollectionDetails?.chain_id === item[1]
     );
     setNetworkName(NetworkName || false);
   }, [CollectionDetails]);
 
-  useEffect(() => {
-    if (socket) {
-      if (NetworkName[0] == "XUMM") {
-        socket.emit("xumm-wallet", walletAddress, setBlanceXumm);
-        return () => {
-          socket.removeAllListeners("xumm-wallet");
-        };
-      }
-    }
-  });
+  // useEffect(() => {
+  //   if (socket) {
+  //     if (NetworkName[0] == "XUMM") {
+  //       socket.emit("xumm-wallet", walletAddress, setBlanceXumm);
+  //       return () => {
+  //         socket.removeAllListeners("xumm-wallet");
+  //       };
+  //     }
+  //   }
+  // });
+
+  console.log('newNFT', CollectionDetails, id);
 
   const buyHnadleChange = (e) => {
     e.preventDefault();
@@ -259,24 +266,21 @@ function NftDetails() {
     switch (type) {
       case "FB":
         window.open(
-          `https://www.facebook.com/sharer/sharer.php?u=${
-            window.location.href
-          }&caption=${CollectionDetails?.Nftname || ""}`,
+          `https://www.facebook.com/sharer/sharer.php?u=${window.location.href
+          }&caption=${CollectionDetails?.name || ""}`,
           "_blank"
         );
         return;
       case "TW":
         window.open(
-          `https://twitter.com/share?url=${window.location.href}&text=${
-            CollectionDetails?.Nftname || ""
+          `https://twitter.com/share?url=${window.location.href}&text=${CollectionDetails?.name || ""
           }`,
           "_blank"
         );
         return;
       case "TEL":
         window.open(
-          `https://telegram.me/share/url?url=${window.location.href}&text=${
-            CollectionDetails?.Nftname || ""
+          `https://telegram.me/share/url?url=${window.location.href}&text=${CollectionDetails?.name || ""
           }`,
           "_blank"
         );
@@ -335,7 +339,7 @@ function NftDetails() {
           dispatch(
             SetBurnData({
               modal: false,
-              Burnfunc: () => {},
+              Burnfunc: () => { },
             })
           );
           dispatch(
@@ -368,9 +372,9 @@ function NftDetails() {
               dispatch(
                 submitTranscation(id, {
                   Status:
-                    parseInt(CollectionDetails.no_of_copies) -
+                    (parseInt(CollectionDetails.no_of_copies) -
                       parseInt(BurnValue) <
-                    1
+                      1)
                       ? false
                       : CollectionDetails.Status,
                   no_of_copies:
@@ -521,9 +525,9 @@ function NftDetails() {
 
     const Data = [...CollectionDetails.Listing, data];
 
-    const available = Data.reduce((value, item) => {
-      return value + (item.Status ? parseInt(item.AvailableQuantity) : 0);
-    }, 0);
+    // const available = Data.reduce((value, item) => {
+    //   return value + (item.Status ? parseInt(item.AvailableQuantity) : 0);
+    // }, 0);
 
     await dispatch(
       submitTranscation(id, {
@@ -1027,7 +1031,7 @@ function NftDetails() {
           approve: false,
           ModalType: "stripe",
           modal: true,
-          func: () => {},
+          func: () => { },
         })
       );
       clearInterval(apiCall);
@@ -1059,7 +1063,7 @@ function NftDetails() {
                             approve: false,
                             ModalType: "stripe",
                             modal: false,
-                            func: () => {},
+                            func: () => { },
                           })
                         );
 
@@ -1094,7 +1098,7 @@ function NftDetails() {
                             approve: false,
                             ModalType: "stripe",
                             modal: true,
-                            func: () => {},
+                            func: () => { },
                           })
                         );
 
@@ -1133,7 +1137,7 @@ function NftDetails() {
                               approve: false,
                               ModalType: "stripe",
                               modal: true,
-                              func: () => {},
+                              func: () => { },
                             })
                           );
 
@@ -1167,7 +1171,7 @@ function NftDetails() {
                                       approve: false,
                                       ModalType: "stripe",
                                       modal: false,
-                                      func: () => {},
+                                      func: () => { },
                                     })
                                   );
                                   setTimeout(() => {
@@ -1181,7 +1185,7 @@ function NftDetails() {
                                       approve: false,
                                       ModalType: "stripe",
                                       modal: false,
-                                      func: () => {},
+                                      func: () => { },
                                     })
                                   );
 
@@ -1533,6 +1537,7 @@ function NftDetails() {
       return false;
     }
   };
+
   const buyMultiXRP = async (id, value, resp, qty, i) => {
     dispatch(
       SetFollowrData({
@@ -1630,6 +1635,7 @@ function NftDetails() {
       return false;
     }
   };
+
   let likeIndex = CollectionDetails?.likes_count?.findIndex(
     (ele) => ele === User_id
   );
@@ -1669,27 +1675,25 @@ function NftDetails() {
     setExpandUrl("");
     setExpandImage(false);
   };
-
+  console.log('CollectionDetails', CollectionDetails);
   return (
     <section className="profile-section mt-3 mt-sm-4">
       <div className="container-lg">
         <div className="row align-items-center justify-content-between py-3 py-md-4 position-relative">
           <div className="col-12 col-sm-9">
             <p title={`Available For sale/No of Copies`}>
-              {CollectionDetails?.Nftname || ""}
+              {CollectionDetails?.name || ""}
               <span>
                 Total Qty: <b>{`${CollectionDetails?.no_of_copies || 1}`}</b>{" "}
                 Listed Qty:{" "}
-                <b>{`${
-                  (CollectionDetails?.Listing || []).reduce((value, ele) => {
-                    return value + (ele.Status ? value + ele.Quantity : 0);
-                  }, 0) || 0
-                }`}</b>{" "}
+                <b>{`${(CollectionDetails?.Listing || []).reduce((value, ele) => {
+                  return value + (ele.Status ? value + ele.Quantity : 0);
+                }, 0) || 0
+                  }`}</b>{" "}
                 Sold Qty:{" "}
-                <b>{`${
-                  (CollectionDetails?.no_of_copies || 0) -
+                <b>{`${(CollectionDetails?.no_of_copies || 0) -
                   (CollectionDetails?.available_copies || 0)
-                }`}</b>{" "}
+                  }`}</b>{" "}
                 Available Qty:{" "}
                 <b>{`${CollectionDetails?.available_copies || 0}`}</b>
               </span>
@@ -1746,18 +1750,11 @@ function NftDetails() {
                   </li>
                 </Dropdown.Menu>
               </Dropdown>
-              {console.log(
-                parseInt(CollectionDetails?.no_of_copies) ==
-                  parseInt(CollectionDetails?.available_copies),
-                parseInt(CollectionDetails?.available_copies),
-                parseInt(CollectionDetails?.no_of_copies)
-              )}
               <div className="heart">
                 <button className={` card__likes heart `}>
                   <i
-                    className={`${
-                      likeIndex >= 0 ? "text-danger" : ""
-                    } fa fa-light fa-heart `}
+                    className={`${likeIndex >= 0 ? "text-danger" : ""
+                      } fa fa-light fa-heart `}
                     onClick={() => handleLike(CollectionDetails)}
                   ></i>
                   {/* <img
@@ -1782,7 +1779,7 @@ function NftDetails() {
 
                     <Dropdown.Menu className="activeNone">
                       {parseInt(CollectionDetails?.no_of_copies) ==
-                      parseInt(CollectionDetails?.available_copies) ? null : (
+                        parseInt(CollectionDetails?.available_copies) ? null : (
                         <li>
                           <Dropdown.Item href="#" onClick={putOnSale}>
                             {"Put On Sale"}
@@ -1822,60 +1819,61 @@ function NftDetails() {
         <div className="row">
           <div className="col-md-6">
             <div className="profile-box h-100">
-              {CollectionDetails.mediaType == "video" ? (
-                <video
-                  width="100%"
-                  height="100%"
-                  controls
-                  controlsList="nodownload"
-                >
-                  <source
-                    src={
-                      process.env.REACT_APP_BACKENDURL +
-                      "/" +
-                      CollectionDetails.image +
-                      "#toolbar=0"
-                    }
-                  />
-                </video>
-              ) : CollectionDetails.mediaType == "audio" ? (
-                <div
-                  className="collection-card-img audio_tag mp-format-cover"
-                  style={{
-                    backgroundImage: `url("${process.env.REACT_APP_BACKENDURL}/${CollectionDetails.coverImage}")`,
-                  }}
-                >
-                  <audio
-                    size="550x400"
-                    controls="controls"
-                    controlsList="nodownload"
-                    className="audio-responsive"
-                    src={`${process.env.REACT_APP_BACKENDURL}/${CollectionDetails.image}`}
-                  ></audio>
-                </div>
-              ) : (
-                <>
-                  <img
-                    src={`${process.env.REACT_APP_BACKENDURL}/${
-                      CollectionDetails.coverImage || CollectionDetails.image
-                    }`}
-                    alt="crosstower"
-                  />
-                  <div
-                    class="expand-btn"
-                    onClick={() =>
-                      handleExpandImage(
-                        `${process.env.REACT_APP_BACKENDURL}/${
-                          CollectionDetails.coverImage ||
-                          CollectionDetails.image
-                        }`
-                      )
-                    }
-                  >
-                    <img src="/images/maximize.svg" alt="" />
-                  </div>
+              {CollectionDetails?.mint_details ? CollectionDetails?.mint_details.map((data) => {
+                return <>
+                  {data.media_type == "video" ? (
+                    <video
+                      width="100%"
+                      height="100%"
+                      controls
+                      controlsList="nodownload"
+                    >
+                      <source
+                        src={
+                          process.env.REACT_APP_BACKENDURL +
+                          "/" +
+                          data.image +
+                          "#toolbar=0"
+                        }
+                      />
+                    </video>
+                  ) : data.media_type == "audio" ? (
+                    <div
+                      className="collection-card-img audio_tag mp-format-cover"
+                      style={{
+                        backgroundImage: `url("${CollectionDetails.cover_image}")`,
+                      }}
+                    >
+                      <audio
+                        size="550x400"
+                        controls="controls"
+                        controlsList="nodownload"
+                        className="audio-responsive"
+                        src={`${data.image}`}
+                      ></audio>
+                    </div>
+                  ) : (
+                    <>
+                      <img
+                        src={`${CollectionDetails.cover_image || CollectionDetails.image}`}
+                        alt="crosstower"
+                      />
+                      <div
+                        class="expand-btn"
+                        onClick={() =>
+                          handleExpandImage(
+                            `${CollectionDetails.cover_image ||
+                            CollectionDetails.image
+                            }`
+                          )
+                        }
+                      >
+                        <img src="/images/maximize.svg" alt="" />
+                      </div>
+                    </>
+                  )}
                 </>
-              )}
+              }) : null}
             </div>
           </div>
 
@@ -1891,7 +1889,7 @@ function NftDetails() {
                     readMoreClassName="read-more-less--more"
                     readLessClassName="read-more-less--less"
                   >
-                    {CollectionDetails?.Description || ""}
+                    {CollectionDetails?.description || ""}
                   </ReactReadMoreReadLess>
                 </article>
               </div>
@@ -1903,17 +1901,16 @@ function NftDetails() {
                   </div>
                   <div className="pro-div">
                     <Link
-                      to={`/Users/${
-                        CollectionDetails?.creator_id?._id ||
+                      to={`/Users/${CollectionDetails?.creator_id?._id ||
                         CollectionDetails?.creator_id
-                      }`}
+                        }`}
                     >
                       <img
                         src={
                           CollectionDetails?.creator_id?.image
                             ? process.env.REACT_APP_BACKENDURL +
-                              "/" +
-                              CollectionDetails?.creator_id?.image
+                            "/" +
+                            CollectionDetails?.creator_id?.image
                             : "/images/prfile-pic.jpg"
                         }
                         alt="crosstower"
@@ -1923,23 +1920,23 @@ function NftDetails() {
 
                   <div className="user-detail">
                     <Link
-                      to={`/Users/${
-                        CollectionDetails?.creator_id?._id ||
+                      to={`/Users/${CollectionDetails?.creator_id?._id ||
                         CollectionDetails?.creator_id
-                      }`}
+                        }`}
                     >
-                      <p title={CollectionDetails?.cretor_wallet_address || ""}>
+
+                      <p title={Array.isArray(CollectionDetails?.royalty) ? CollectionDetails?.royalty[0]?.creator_wallet_add : ""}>
                         {CollectionDetails?.creator_id?.Name
                           ? CollectionDetails?.creator_id?.Name
                           : ""}
                       </p>
                       <p>
                         {(
-                          CollectionDetails?.cretor_wallet_address || ""
+                          Array.isArray(CollectionDetails?.royalty) ? CollectionDetails?.royalty[0]?.creator_wallet_add : ""
                         )?.slice(0, 4) +
                           "..." +
                           (
-                            CollectionDetails?.cretor_wallet_address || ""
+                            Array.isArray(CollectionDetails?.royalty) ? CollectionDetails?.royalty[0]?.creator_wallet_add : ""
                           ).slice(-4)}
                         <img
                           src="/images/copy-svgrepo-com.svg"
@@ -1975,7 +1972,7 @@ function NftDetails() {
                     </div> */}
                   </div>
                 )}
-                {!CollectionDetails?.Status ? (
+                {CollectionDetails?.status !== "PUBLISHED" ? (
                   <div className="left-div">
                     <div className="pro-div-2">
                       {" "}
@@ -1983,17 +1980,17 @@ function NftDetails() {
                     </div>
 
                     <div className="user-detail">
-                      <p>Burnt</p>
+                      <p>{CollectionDetails?.status}</p>
                     </div>
                   </div>
                 ) : null}
                 <div className="roy-box">
-                  {CollectionDetails?.Royality || 30}% of resale royalty
+                  {Array.isArray(CollectionDetails?.royalty) ? CollectionDetails?.royalty[0]?.percentage : 30}% of resale royalty
                 </div>
                 <div className="clear"></div>
               </div>
 
-              {CollectionDetails?.Status ? (
+              {CollectionDetails?.status === "PUBLISHED" ? (
                 <div className="bolck-div">
                   <div className="row">
                     {/* <div className="col-sm-4 col-xs-6">
@@ -2026,32 +2023,30 @@ function NftDetails() {
                     </div> */}
 
                     <div className="col-sm-4 col-xs-6">
-                      {CollectionDetails?.nft_type !== "OPENBID" && (
+                      {CollectionDetails?.launch_details?.sale_type !== "OPENBID" && (
                         <>
                           <p>
                             <span>Sale Price</span>
                           </p>
                           <p>
-                            {CollectionDetails?.sign_instant_sale_price}{" "}
+                            {CollectionDetails?.launch_details.price}{" "}
                             {NetworkName && NetworkName[0] == "XUMM"
                               ? "XRP"
                               : "ETH"}
                           </p>
                         </>
                       )}
-                      {CollectionDetails?.Owner_id?._id == User_id ||
-                      !(endIn > 0) ? null : (
+                      {(
                         <div className="spce-div">
-                          {CollectionDetails.put_on_sale &&
-                            CollectionDetails?.nft_type !== "OPENBID" && (
-                              <a
-                                href="!#"
-                                className="bolck-div-button-2 text-white"
-                                onClick={buyHnadleChange}
-                              >
-                                Buy
-                              </a>
-                            )}
+                          {CollectionDetails?.status === "PUBLISHED" && (
+                            <a
+                              href="!#"
+                              className="bolck-div-button-2 text-white"
+                              onClick={buyHnadleChange}
+                            >
+                              Buy
+                            </a>
+                          )}
                         </div>
                       )}
                     </div>
@@ -2216,10 +2211,10 @@ function NftDetails() {
                                 (e.target.value === "" ||
                                   re.test(e.target.value)) &&
                                 parseInt(e.target.value || 0) <=
-                                  parseInt(CollectionDetails.own_copies) -
-                                    parseInt(
-                                      CollectionDetails.available_copies || 0
-                                    )
+                                parseInt(CollectionDetails.own_copies) -
+                                parseInt(
+                                  CollectionDetails.available_copies || 0
+                                )
                               ) {
                                 setSelectCopies(
                                   e.target.value == ""
@@ -2277,14 +2272,14 @@ function NftDetails() {
                     <b>You are about to place a bid for</b>
                   </p>
                   <p>
-                    <b>{CollectionDetails.Nftname}</b> By{" "}
+                    <b>{CollectionDetails.name}</b> By{" "}
                     <b>
                       {CollectionDetails?.cretor_wallet_address
                         ? CollectionDetails?.cretor_wallet_address.slice(0, 4) +
-                          "...." +
-                          CollectionDetails?.cretor_wallet_address.slice(
-                            CollectionDetails?.cretor_wallet_address.length - 4
-                          )
+                        "...." +
+                        CollectionDetails?.cretor_wallet_address.slice(
+                          CollectionDetails?.cretor_wallet_address.length - 4
+                        )
                         : CollectionDetails?.cretor_wallet_address || ""}
                     </b>
                   </p>
@@ -2332,7 +2327,7 @@ function NftDetails() {
                                 (e.target.value === "" ||
                                   re.test(e.target.value)) &&
                                 parseInt(e.target.value || 0) <=
-                                  parseInt(CollectionDetails.no_of_copies)
+                                parseInt(CollectionDetails.no_of_copies)
                               ) {
                                 setOfferQtyValue(e.target.value);
                               }

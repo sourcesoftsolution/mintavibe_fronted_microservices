@@ -116,9 +116,8 @@ function Login() {
         if (rememberMe) {
           setCookiesData();
         }
-        console.log(process.env.REACT_APP_USER_BACKENDURL + apiURl.login);
-        await allApi({
-          url: `${process.env.REACT_APP_USER_BACKENDURL + apiURl.login}`,
+        await API({
+          url: apiURl.login,
           method: "POST",
           body: inpData,
           headers: {
