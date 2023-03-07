@@ -4,7 +4,7 @@ const apiURl = {
   AllFavNft: "/favnft",
   CreatorList: "/femalecreator",
   GetCollections: "/collections/v1",
-  User: "/v1/users",
+  User: "/user/v1/users",
   ProfileListing: "/listing",
   Products: "/nft",
   allNftList: "/allNftList",
